@@ -1,0 +1,12 @@
+# Python
+__pycache__/
+*.pyc
+.env
+audit_sync.py
+sync_fix.py
+# Streamlit
+.streamlit/config.toml
+
+# Bilder/Temp
+Produkt_Bilder/
+temp_upload.jpg
