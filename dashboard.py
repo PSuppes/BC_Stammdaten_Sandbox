@@ -56,11 +56,11 @@ st.markdown("""
 
 # --- DATA HELPERS ---
 def fetch_data():
-    res = supabase.table("import_queue").select("*").order("id", desc=True).execute()
+    res = supabase.table("import_queue_duplicate").select("*").order("id", desc=True).execute()
     return pd.DataFrame(res.data)
 
 def update_status(db_id, new_status):
-    supabase.table("import_queue").update({"status": new_status}).eq("id", db_id).execute()
+    supabase.table("import_queue_duplicate").update({"status": new_status}).eq("id", db_id).execute()
 
 # --- SIDEBAR ---
 df = fetch_data()

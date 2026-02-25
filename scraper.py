@@ -283,7 +283,7 @@ def sync_to_supabase(entry):
         target_url = entry.get("url") or sd.get('URL')
 
         # Check ob bereits verarbeitet (PROCESSED / IGNORED)
-        existing = supabase.table("import_queue").select("status").eq("product_hash", fingerprint).execute()
+        existing = supabase.table("import_queue_duplicate").select("status").eq("product_hash", fingerprint).execute()
         if existing.data:
             if existing.data[0]['status'] in ['PROCESSED', 'IGNORED']:
                 return # Keine Änderung bei fertigen Produkten
@@ -297,7 +297,7 @@ def sync_to_supabase(entry):
             "url": target_url
         }
         # 2. Entscheidend: on_conflict="url" statt "product_hash"
-        supabase.table("import_queue").upsert(payload, on_conflict="url").execute()
+        supabase.table("import_queue_duplicate").upsert(payload, on_conflict="url").execute()
         print(f"✅ Synchronisiert: {entry['Produktname']}")
     except Exception as e:
         print(f"❌ Supabase Sync Fehler: {e}")
@@ -322,7 +322,7 @@ def run_nightly_scraper():
         for link in links:
             # --- DER ENTSCHEIDENDE PERFORMANCE-CHECK ---
             # Wir prüfen anhand der URL, ob der Artikel schon in Supabase ist
-            check = supabase.table("import_queue").select("status").eq("url", link).execute()
+            check = supabase.table("import_queue_duplicate").select("status").eq("url", link).execute()
             
             if check.data:
                 # Artikel ist bekannt (haben wir gerade im Quick-Import erledigt)
